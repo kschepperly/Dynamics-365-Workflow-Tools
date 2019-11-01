@@ -60,11 +60,11 @@ namespace msdyncrmWorkflowTools
             string fetchXML = @"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='true'>
                                       <entity name='" + PrimaryEntityName + @"'>
                                         <link-entity name='" + _relationshipName + @"' from='" + PrimaryEntityName + @"id' to='" + PrimaryEntityName + @"id' visible='false' intersect='true'>
-                                        <link-entity name='opportunity' from='opportunityid' to='opportunityid' alias='ab'>
+                                        
                                             <filter type='and'>
-                                            <condition attribute='opportunityid' operator='eq' value='" + PrimaryEntityId.ToString() + @"' />
+                                            <condition attribute='" + PrimaryEntityName + @"id' operator='eq' value='" + PrimaryEntityId.ToString() + @"' />
                                             </filter>
-                                        </link-entity> 
+                                       
                                         <link-entity name='" + entityName + @"' from='" + entityName + @"id' to='" + entityName + @"id' alias='ac'>
                                                 <filter type='and'>
                                                   <condition attribute='" + entityName + @"id' operator='eq' value='" + ParentId + @"' />
@@ -121,7 +121,10 @@ namespace msdyncrmWorkflowTools
 
         public Guid CloneRecord(string entityName, string objectId, string fieldstoIgnore, string prefix)
         {
+            tracingService.Trace("entering CloneRecord");
+            if (fieldstoIgnore == null) fieldstoIgnore = "";
             fieldstoIgnore = fieldstoIgnore.ToLower();
+            tracingService.Trace("fieldstoIgnore="+ fieldstoIgnore);
             Entity retrievedObject = service.Retrieve(entityName, new Guid(objectId), new ColumnSet(allColumns: true));
             tracingService.Trace("retrieved object OK");
 
